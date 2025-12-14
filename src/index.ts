@@ -1,2 +1,2 @@
 export { SchemaVersion, JsonSchema } from "./Schemas";
-export { validateSchema } from "./Validation"
+export { validateSchema, validate } from "./SchemaUtils"
