@@ -43,7 +43,7 @@ export interface JsonSchema {
 }
 
 export interface SchemaStore {
-
+    addSchema(version: SchemaVersion, schema: JsonSchema): string
 }
 
 

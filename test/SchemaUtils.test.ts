@@ -1,4 +1,4 @@
-import { validateSchema, validate, SchemaVersion } from "../src";
+import {validateSchema, validate, SchemaVersion, JsonSchema} from "../src";
 
 describe('Validation Tests', () => {
 
@@ -73,7 +73,7 @@ describe('Validation Tests', () => {
         ];
 
         // Define a small set of schemas that are compatible across all listed drafts
-        const schemas = [
+        const schemas: JsonSchema[] = [
             {
                 name: 'simple string with minLength',
                 schema: { type: 'string', minLength: 3 },
@@ -96,7 +96,7 @@ describe('Validation Tests', () => {
         ];
 
         // Build a table of [version, schemaName, schema, validData, invalidData]
-        const table: Array<[SchemaVersion, string, unknown, unknown, unknown]> = [];
+        const table: Array<[SchemaVersion, string, JsonSchema, unknown, unknown]> = [];
         for (const v of versions) {
             for (const s of schemas) {
                 table.push([v, s.name, s.schema, s.valid, s.invalid]);
@@ -105,7 +105,7 @@ describe('Validation Tests', () => {
 
         it.each(table)(
             'returns valid=true for valid data (version=%s, %s)',
-            (version, _name, schema: any, validData) => {
+            (version, _name, schema: JsonSchema, validData) => {
                 const result = validate(version, schema, validData);
                 expect(result).toBeDefined();
                 expect(result.valid).toBe(true);
@@ -116,7 +116,7 @@ describe('Validation Tests', () => {
 
         it.each(table)(
             'returns valid=false for invalid data (version=%s, %s)',
-            (version, _name, schema: any, _validData, invalidData) => {
+            (version, _name, schema: JsonSchema, _validData, invalidData) => {
                 const result = validate(version, schema, invalidData);
                 expect(result).toBeDefined();
                 expect(result.valid).toBe(false);
