@@ -1,3 +1,16 @@
+# 1.0.0 (2025-12-14)
+
+
+### Bug Fixes
+
+* Added semantic release dependencies for the release action ([ef1f0a8](https://github.com/eresearchqut/schema-store/commit/ef1f0a84deb146ad7e0ca27a91aca83bf03e200a))
+* Added semantic release dependencies for the release action ([62c6373](https://github.com/eresearchqut/schema-store/commit/62c6373fd762417303c10eba2e6d94a01efe6ead))
+
+
+### Features
+
+* Added validate method to SchemaUtils. ([e7e80a2](https://github.com/eresearchqut/schema-store/commit/e7e80a2de0823b5ce7b6a570159ff53a60c7e95d))
+
 ## [1.5.9](https://github.com/eresearchqut/ddb-repository/compare/v1.5.8...v1.5.9) (2025-12-11)
 
 
