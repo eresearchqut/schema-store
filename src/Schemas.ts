@@ -42,5 +42,9 @@ export interface JsonSchema {
     [p: string]: any
 }
 
+export interface SchemaStore {
+
+}
+
 
 
