@@ -2,7 +2,7 @@
   "name": "@eresearchqut/schema-store",
   "type": "module",
   "version": "0.0.1",
-  "description": "A TypeScript library providing a generic store and operation for handling json schemas",
+  "description": "A TypeScript library providing a generic validation and store operations for json schemas",
   "main": "dist/index",
   "types": "dist/index",
   "files": [
