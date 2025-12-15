@@ -39,7 +39,8 @@ export const MetaCompilers: Record<SpecificationVersion, SchemaNode> = {
 }
 
 export interface SchemaStore {
-    addSchema(specificationVersion: SpecificationVersion, schema: JsonSchema): string
+    addSchema(specificationVersion: SpecificationVersion, schema: JsonSchema): Promise<string> | string;
+    getSchema(id: string): Promise<SchemaWithSpecification | undefined> | SchemaWithSpecification | undefined;
 }
 
 export class SchemaValidationError extends Error {
@@ -59,7 +60,7 @@ export class SchemaValidationError extends Error {
 
 }
 
-export interface StoreRecord {
+export interface SchemaWithSpecification {
     specificationVersion: SpecificationVersion;
     schema: JsonSchema;
 }
