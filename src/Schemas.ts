@@ -7,7 +7,8 @@ import {
     Draft,
     SchemaNode,
     remotes,
-    compileSchema
+    compileSchema,
+    JsonSchema, JsonError
 } from "json-schema-library";
 
 export type SchemaVersion = 'draft-2020-12' | 'draft-2019-09' | 'draft-07' | 'draft-06' | 'draft-04';
@@ -37,14 +38,26 @@ export const MetaCompilers: Record<SchemaVersion, SchemaNode> = {
     "draft-04": compileSchema(MetaSchemas['draft-04'], {drafts: [Drafts['draft-04']]}),
 }
 
-export interface JsonSchema {
-    // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-    [p: string]: any
-}
-
 export interface SchemaStore {
     addSchema(version: SchemaVersion, schema: JsonSchema): string
 }
 
+export class SchemaValidationError extends Error {
+
+
+    private readonly errors: JsonError[];
+
+    constructor(message: string, errors: JsonError[]) {
+        super(message);
+        this.name = "SchemaValidationError";
+        Object.setPrototypeOf(this, SchemaValidationError.prototype);
+        this.errors = errors;
+    }
+
+    getErrors(): JsonError[] {
+        return this.errors;
+    }
+
+}
 
 

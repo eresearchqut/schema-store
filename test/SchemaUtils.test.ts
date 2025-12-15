@@ -1,6 +1,6 @@
 import {validateSchema, validate, SchemaVersion, JsonSchema} from "../src";
 
-describe('Validation Tests', () => {
+describe('Schema Util Tests', () => {
 
     beforeAll(async () => {
 
