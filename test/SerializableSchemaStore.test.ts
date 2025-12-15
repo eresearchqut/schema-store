@@ -1,10 +1,10 @@
 import {SerializableSchemaStore} from "../src";
-import {SpecificationVersion} from "../src";
+import {DraftId} from "../src";
 import {JsonSchema} from "json-schema-library";
 
 describe('SerializableSchemaStore marshall/unmarshall', () => {
 
-  const versions: SpecificationVersion[] = [
+  const versions: DraftId[] = [
     'draft-2020-12',
     'draft-2019-09',
     'draft-07',

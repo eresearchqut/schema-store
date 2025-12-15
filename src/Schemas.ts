@@ -8,12 +8,13 @@ import {
     SchemaNode,
     remotes,
     compileSchema,
-    JsonSchema, JsonError
+    JsonSchema,
+    JsonError
 } from "json-schema-library";
 
-export type SpecificationVersion = 'draft-2020-12' | 'draft-2019-09' | 'draft-07' | 'draft-06' | 'draft-04';
+export type DraftId = 'draft-2020-12' | 'draft-2019-09' | 'draft-07' | 'draft-06' | 'draft-04';
 
-export const Drafts: Record<SpecificationVersion, Draft> = {
+export const Drafts: Record<DraftId, Draft> = {
     "draft-04": draft04,
     "draft-06": draft06,
     "draft-07": draft07,
@@ -22,7 +23,7 @@ export const Drafts: Record<SpecificationVersion, Draft> = {
 }
 
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-export const MetaSchemas : Record<SpecificationVersion, any> = {
+export const MetaSchemas : Record<DraftId, any> = {
     'draft-2020-12': remotes['https://json-schema.org/draft/2020-12/meta/validation'],
     "draft-2019-09": remotes['https://json-schema.org/draft/2019-09/meta/validation'],
     "draft-07": remotes['http://json-schema.org/draft-07/schema#'],
@@ -30,7 +31,7 @@ export const MetaSchemas : Record<SpecificationVersion, any> = {
     "draft-04": remotes['http://json-schema.org/draft-04/schema#'],
 }
 
-export const MetaCompilers: Record<SpecificationVersion, SchemaNode> = {
+export const MetaCompilers: Record<DraftId, SchemaNode> = {
     'draft-2020-12': compileSchema(MetaSchemas['draft-2020-12'], {drafts: [Drafts['draft-2020-12']]}),
     "draft-2019-09": compileSchema(MetaSchemas['draft-2019-09'], {drafts: [Drafts['draft-2019-09']]}),
     "draft-07": compileSchema(MetaSchemas['draft-07'], {drafts: [Drafts['draft-07']]}),
@@ -39,8 +40,8 @@ export const MetaCompilers: Record<SpecificationVersion, SchemaNode> = {
 }
 
 export interface SchemaStore {
-    addSchema(specificationVersion: SpecificationVersion, schema: JsonSchema): Promise<string> | string;
-    getSchema(id: string): Promise<SchemaWithSpecification | undefined> | SchemaWithSpecification | undefined;
+    addSchema(draftId: DraftId, schema: JsonSchema): Promise<string> | string;
+    getSchema(id: string): Promise<SchemaVersion | undefined> | SchemaVersion | undefined;
 }
 
 export class SchemaValidationError extends Error {
@@ -60,7 +61,8 @@ export class SchemaValidationError extends Error {
 
 }
 
-export interface SchemaWithSpecification {
-    specificationVersion: SpecificationVersion;
+export interface SchemaVersion {
+    specificationVersion: DraftId;
     schema: JsonSchema;
 }
+

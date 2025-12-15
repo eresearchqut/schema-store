@@ -1,18 +1,18 @@
-import {SchemaStore, SpecificationVersion, SchemaWithSpecification} from "./Schemas";
+import {SchemaStore, DraftId, SchemaVersion} from "./Schemas";
 import {JsonSchema} from "json-schema-library";
 import crypto from "node:crypto";
 
 export class SerializableSchemaStore implements SchemaStore {
 
-    private store: Record<string, SchemaWithSpecification> = {};
+    private store: Record<string, SchemaVersion> = {};
 
-    addSchema(specificationVersion: SpecificationVersion, schema: JsonSchema): string {
+    addSchema(specificationVersion: DraftId, schema: JsonSchema): string {
         const id = crypto.randomUUID();
         this.store[id] = {specificationVersion, schema};
         return id;
     }
 
-    getSchema(id: string): SchemaWithSpecification | undefined {
+    getSchema(id: string): SchemaVersion | undefined {
         return this.store[id];
     }
 

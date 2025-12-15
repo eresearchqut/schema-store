@@ -1,11 +1,11 @@
 import {SchemaRepository} from "../src";
 import {SerializableSchemaStore} from "../src";
-import {SchemaValidationError, SpecificationVersion} from "../src";
+import {SchemaValidationError, DraftId} from "../src";
 import {JsonSchema} from "json-schema-library";
 
 describe('Schema Repository Tests', () => {
 
-    const versions: SpecificationVersion[] = [
+    const versions: DraftId[] = [
         'draft-2020-12',
         'draft-2019-09',
         'draft-07',
@@ -49,7 +49,7 @@ describe('Schema Repository Tests', () => {
         ];
 
         // Build parameter table [version, caseName, validSchema, invalidSchema]
-        const table: Array<[SpecificationVersion, string, JsonSchema, JsonSchema]> = [];
+        const table: Array<[DraftId, string, JsonSchema, JsonSchema]> = [];
         for (const v of versions) {
             for (const c of schemaCases) {
                 table.push([v, c.name, c.valid, c.invalid]);
@@ -95,7 +95,7 @@ describe('Schema Repository Tests', () => {
                 required: ['name'],
                 additionalProperties: false
             };
-            const version: SpecificationVersion = 'draft-07';
+            const version: DraftId = 'draft-07';
             const id = await repo.addSchema(version, schema);
 
             const stored = await repo.getSchema(id);
