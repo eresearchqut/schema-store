@@ -1,4 +1,4 @@
-import {MetaCompilers, DraftId, Drafts} from "./Schemas";
+import {MetaCompilers, DraftId, Drafts} from "./Model";
 import {compileSchema, JsonSchema} from "json-schema-library";
 
 export const validateSchema = (draftId: DraftId, schema: JsonSchema) => {
@@ -10,3 +10,7 @@ export const validateSchema = (draftId: DraftId, schema: JsonSchema) => {
 export const validate = (draftId: DraftId, schema: JsonSchema, data: any) => {
     return compileSchema(schema, {drafts: [Drafts[draftId]]}).validate(data)
 }
+
+
+
+

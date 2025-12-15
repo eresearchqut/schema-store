@@ -1,23 +1,35 @@
-import {SchemaStore, SchemaValidationError, DraftId, SchemaVersion} from "./Schemas";
+import {
+    SchemaStore,
+    SchemaValidationError,
+    DraftId,
+    SchemaVersion,
+    SchemaMetadata,
+    Schemas,
+    SchemaCreateError
+} from "./Model";
 import {validateSchema} from "./SchemaUtils";
 import {JsonSchema} from "json-schema-library";
 
+export const DEFAULT_VERSION = new SchemaVersion(0, 0, 1);
+
 export class SchemaRepository {
 
-    constructor(readonly  schemaStore: SchemaStore) {
+
+
+    constructor(readonly schemaStore: SchemaStore) {
 
     }
 
-    public addSchema(version: DraftId, schema: JsonSchema): Promise<string> | string {
-        const {valid, errors} = validateSchema(version, schema);
+    public async createSchema(path: string, draftId: DraftId, schema: JsonSchema): Promise<SchemaMetadata> {
+        if (await this.schemaStore.get(path)) {
+            return Promise.reject(new SchemaCreateError(`Schema with path ${path} already exists`, path, draftId));
+        }
+        const {valid, errors} = validateSchema(draftId, schema);
         if (!valid)
-            throw new SchemaValidationError(`Schema is not valid for version ${version}`, errors);
-        return this.schemaStore.addSchema(version, schema);
+            throw new SchemaValidationError(`Schema is not valid for draft ${draftId}`, path, draftId, errors);
+        return this.schemaStore.put(path, draftId, {...schema, $schema: Schemas[draftId]}, DEFAULT_VERSION);
     }
 
-    public getSchema(id: string): Promise<SchemaVersion | undefined> | SchemaVersion | undefined {
-        return this.schemaStore.getSchema(id);
-    }
 
 
 

@@ -1,26 +1,38 @@
-import {SchemaStore, DraftId, SchemaVersion} from "./Schemas";
+import {
+    SchemaStore,
+    DraftId,
+    SchemaVersion,
+    SchemaMetadata,
+    SchemaNotFoundError,
+} from "./Model";
 import {JsonSchema} from "json-schema-library";
-import crypto from "node:crypto";
 
 export class SerializableSchemaStore implements SchemaStore {
 
-    private store: Record<string, SchemaVersion> = {};
+    private store: Record<string, Record<string, JsonSchema>> = {};
 
-    addSchema(specificationVersion: DraftId, schema: JsonSchema): string {
-        const id = crypto.randomUUID();
-        this.store[id] = {specificationVersion, schema};
-        return id;
+    put(path: string, draftId: DraftId, schema: JsonSchema, schemaVersion: SchemaVersion): Promise<SchemaMetadata> {
+        const schemaMetadata: SchemaMetadata = {schemaVersion, path, draftId};
+        this.store[path] = {[schemaVersion.toString()]: schema};
+        return Promise.resolve(schemaMetadata);
     }
 
-    getSchema(id: string): SchemaVersion | undefined {
-        return this.store[id];
+    get(path: string, schemaVersion?: SchemaVersion): Promise<JsonSchema> {
+        if (!this.store[path] || (schemaVersion && !this.store[path][schemaVersion?.toString()])) {
+            return Promise.reject(new SchemaNotFoundError(schemaVersion ? `Schema with path ${path} does not exist for version: ${schemaVersion.toString()}` : `Schema with path ${path} does not exist`, path));
+        }
+        const versions = this.store[path];
+        if (schemaVersion) {
+            return Promise.resolve(versions[schemaVersion?.toString()]);
+        }
+        const maxVersion = Object.keys(versions).sort().reverse()[0]
+        return Promise.resolve(versions[maxVersion]);
     }
 
-    // addVersion(id: string, path: string, version: string): string {
-    //     const id = crypto.randomUUID();
-    //     this.store[id] = schema;
-    //     return id;
-    // }
+    getVersions(path: string): Promise<SchemaVersion[]> {
+        return Promise.resolve(this.store[path] ? Object.keys(this.store[path]).sort().reverse().map(SchemaVersion.fromString) : [])
+    }
+
 
     marshall(): string {
         return JSON.stringify(this.store);

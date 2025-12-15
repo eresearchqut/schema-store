@@ -1,87 +1,105 @@
-import {SerializableSchemaStore} from "../src";
-import {DraftId} from "../src";
-import {JsonSchema} from "json-schema-library";
+import {SerializableSchemaStore, SchemaVersion, DraftId, JsonSchema} from "../src";
 
-describe('SerializableSchemaStore marshall/unmarshall', () => {
+describe('SerializableSchemaStore', () => {
 
-  const versions: DraftId[] = [
-    'draft-2020-12',
-    'draft-2019-09',
-    'draft-07',
-    'draft-06',
-    'draft-04'
-  ];
+    const draft: DraftId = 'draft-07';
 
-  it('marshall on a new store returns valid JSON for an empty object', () => {
-    const store = new SerializableSchemaStore();
-    const json = store.marshall();
-    expect(typeof json).toBe('string');
-    expect(() => JSON.parse(json)).not.toThrow();
-    expect(JSON.parse(json)).toEqual({});
-  });
+    describe('put', () => {
+        it('returns SchemaMetadata with correct fields', async () => {
+            const store = new SerializableSchemaStore();
+            const path = 'schemas/example';
+            const version = new SchemaVersion(1, 0, 0);
+            const schema: JsonSchema = { type: 'string' };
 
-  it('round-trips a single schema for all supported specification versions', () => {
-    for (const version of versions) {
-      const store1 = new SerializableSchemaStore();
-      const schema: JsonSchema = { type: 'string', minLength: 1 };
-      const id = store1.addSchema(version, schema);
+            const meta = await store.put(path, draft, schema, version);
 
-      const json = store1.marshall();
+            expect(meta).toEqual({ schemaVersion: version, path, draftId: draft });
+        });
+    });
 
-      const store2 = new SerializableSchemaStore();
-      store2.unmarshall(json);
+    describe('get', () => {
+        it('retrieves the stored schema when version is specified', async () => {
+            const store = new SerializableSchemaStore();
+            const path = 'schemas/with-version';
+            const version = new SchemaVersion(1, 2, 3);
+            const schema: JsonSchema = { type: 'object', properties: { name: { type: 'string' } } };
 
-      const loaded = store2.getSchema(id);
-      expect(loaded).toBeDefined();
-      expect(loaded?.specificationVersion).toBe(version);
-      expect(loaded?.schema).toEqual(schema);
-    }
-  });
+            await store.put(path, draft, schema, version);
+            const retrieved = await store.get(path, version);
+            expect(retrieved).toEqual(schema);
+        });
 
-  it('round-trips multiple schemas with mixed versions and preserves ids', () => {
-    const store1 = new SerializableSchemaStore();
-    const schemaA: JsonSchema = { $id: 'https://example.com/a', type: 'object', properties: { a: { type: 'number' } }, additionalProperties: false };
-    const schemaB: JsonSchema = { $id: 'https://example.com/b', type: 'array', items: { type: 'integer' } };
-    const schemaC: JsonSchema = { type: 'boolean' };
+        it('retrieves the latest schema when version is not specified (single version case)', async () => {
+            const store = new SerializableSchemaStore();
+            const path = 'schemas/latest';
+            const version = new SchemaVersion(2, 0, 0);
+            const schema: JsonSchema = { type: 'number' };
 
-    const idA = store1.addSchema('draft-07', schemaA);
-    const idB = store1.addSchema('draft-2019-09', schemaB);
-    const idC = store1.addSchema('draft-04', schemaC);
+            await store.put(path, draft, schema, version);
+            const retrieved = await store.get(path);
+            expect(retrieved).toEqual(schema);
+        });
 
-    const json = store1.marshall();
+        it('rejects when schema path does not exist', async () => {
+            const store = new SerializableSchemaStore();
+            await expect(store.get('does/not/exist'))
+                .rejects.toThrow(/Schema with path does\/not\/exist does not exist/);
+        });
 
-    const store2 = new SerializableSchemaStore();
-    store2.unmarshall(json);
+        it('rejects when specific version does not exist for path', async () => {
+            const store = new SerializableSchemaStore();
+            const path = 'schemas/missing-version';
+            const schema: JsonSchema = { type: 'string' };
+            await store.put(path, draft, schema, new SchemaVersion(1, 0, 0));
 
-    expect(store2.getSchema(idA)?.schema).toEqual(schemaA);
-    expect(store2.getSchema(idA)?.specificationVersion).toBe('draft-07');
-    expect(store2.getSchema(idB)?.schema).toEqual(schemaB);
-    expect(store2.getSchema(idB)?.specificationVersion).toBe('draft-2019-09');
-    expect(store2.getSchema(idC)?.schema).toEqual(schemaC);
-    expect(store2.getSchema(idC)?.specificationVersion).toBe('draft-04');
-  });
+            await expect(store.get(path, new SchemaVersion(9, 9, 9)))
+                .rejects.toThrow(/does not exist for version/);
+        });
+    });
 
-  it('unmarshall replaces existing store state (overwrite behavior)', () => {
-    const store = new SerializableSchemaStore();
-    const schema1: JsonSchema = { type: 'number', minimum: 0 };
-    const schema2: JsonSchema = { type: 'string' };
+    describe('getVersions', () => {
+        it('returns an empty array when path not found', async () => {
+            const store = new SerializableSchemaStore();
+            const versions = await store.getVersions('unknown/path');
+            expect(Array.isArray(versions)).toBe(true);
+            expect(versions.length).toBe(0);
+        });
 
-    const id1 = store.addSchema('draft-06', schema1);
-    const snapshot = store.marshall();
+        it('returns a list with the stored version for the path', async () => {
+            const store = new SerializableSchemaStore();
+            const path = 'schemas/versions';
+            const v1 = new SchemaVersion(1, 0, 0);
+            const schema: JsonSchema = { type: 'boolean' };
+            await store.put(path, draft, schema, v1);
 
-    const id2 = store.addSchema('draft-07', schema2);
-    expect(store.getSchema(id1)).toBeDefined();
-    expect(store.getSchema(id2)).toBeDefined();
+            const versions = await store.getVersions(path);
+            expect(versions.map(v => v.toString())).toEqual([v1.toString()]);
+        });
+    });
 
-    // Restore from snapshot that only contained id1
-    store.unmarshall(snapshot);
+    describe('marshall/unmarshall', () => {
+        it('serializes and restores the store contents', async () => {
+            const store1 = new SerializableSchemaStore();
+            const p1 = 'schemas/a';
+            const p2 = 'schemas/b';
+            const vA = new SchemaVersion(1, 0, 0);
+            const vB = new SchemaVersion(3, 2, 1);
+            const sA: JsonSchema = { type: 'string', minLength: 1 };
+            const sB: JsonSchema = { type: 'object', properties: { id: { type: 'integer' } }, additionalProperties: false };
 
-    expect(store.getSchema(id1)).toBeDefined();
-    expect(store.getSchema(id2)).toBeUndefined();
-  });
+            await store1.put(p1, draft, sA, vA);
+            await store1.put(p2, draft, sB, vB);
 
-  it('unmarshall throws when JSON is invalid', () => {
-    const store = new SerializableSchemaStore();
-    expect(() => store.unmarshall('{invalid json')).toThrow(SyntaxError);
-  });
+            const snapshot = store1.marshall();
+
+            const store2 = new SerializableSchemaStore();
+            store2.unmarshall(snapshot);
+
+            await expect(store2.get(p1, vA)).resolves.toEqual(sA);
+            await expect(store2.get(p2, vB)).resolves.toEqual(sB);
+
+            const versionsA = await store2.getVersions(p1);
+            expect(versionsA.map(v => v.toString())).toEqual([vA.toString()]);
+        });
+    });
 });
