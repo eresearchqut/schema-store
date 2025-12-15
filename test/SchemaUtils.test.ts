@@ -1,4 +1,4 @@
-import {validateSchema, validate, SchemaVersion, JsonSchema} from "../src";
+import {validateSchema, validate, SpecificationVersion, JsonSchema} from "../src";
 
 describe('Schema Util Tests', () => {
 
@@ -15,7 +15,7 @@ describe('Schema Util Tests', () => {
     });
 
     describe('validateSchema', () => {
-        const versions: SchemaVersion[] = [
+        const versions: SpecificationVersion[] = [
             'draft-2020-12',
             'draft-2019-09',
             'draft-07',
@@ -64,7 +64,7 @@ describe('Schema Util Tests', () => {
     });
 
     describe('validate (data against schema)', () => {
-        const versions: SchemaVersion[] = [
+        const versions: SpecificationVersion[] = [
             'draft-2020-12',
             'draft-2019-09',
             'draft-07',
@@ -96,7 +96,7 @@ describe('Schema Util Tests', () => {
         ];
 
         // Build a table of [version, schemaName, schema, validData, invalidData]
-        const table: Array<[SchemaVersion, string, JsonSchema, unknown, unknown]> = [];
+        const table: Array<[SpecificationVersion, string, JsonSchema, unknown, unknown]> = [];
         for (const v of versions) {
             for (const s of schemas) {
                 table.push([v, s.name, s.schema, s.valid, s.invalid]);

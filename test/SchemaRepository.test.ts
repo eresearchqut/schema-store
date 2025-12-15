@@ -1,12 +1,12 @@
 
 import { SchemaRepository } from "../src/SchemaRepository";
 import { SerializableSchemaStore } from "../src/SerializableSchemaStore";
-import { SchemaVersion, SchemaValidationError } from "../src";
+import { SpecificationVersion, SchemaValidationError } from "../src";
 import { JsonSchema } from "json-schema-library";
 
 describe('Schema Repository Tests', () => {
 
-    const versions: SchemaVersion[] = [
+    const versions: SpecificationVersion[] = [
         'draft-2020-12',
         'draft-2019-09',
         'draft-07',
@@ -50,7 +50,7 @@ describe('Schema Repository Tests', () => {
     ];
 
     // Build parameter table [version, caseName, validSchema, invalidSchema]
-    const table: Array<[SchemaVersion, string, JsonSchema, JsonSchema]> = [];
+    const table: Array<[SpecificationVersion, string, JsonSchema, JsonSchema]> = [];
     for (const v of versions) {
         for (const c of schemaCases) {
             table.push([v, c.name, c.valid, c.invalid]);
