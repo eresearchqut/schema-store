@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/eresearchqut/schema-store/compare/v1.0.0...v1.0.1) (2025-12-14)
+
+
+### Bug Fixes
+
+* Linting ([24ff4b6](https://github.com/eresearchqut/schema-store/commit/24ff4b6853ff5668652a506e3aafe5c9651cacaa))
+
 # 1.0.0 (2025-12-14)
 
 
