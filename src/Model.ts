@@ -62,6 +62,10 @@ export class SchemaVersion {
         this.addition = addition;
     }
 
+    public toJSON = (): string => toString();
+
+    public fromJson = (json: string): SchemaVersion => SchemaVersion.fromString(json);
+
     public toString = (): string => {
         return `${this.model}-${this.revision}-${this.addition}`
     }
@@ -93,6 +97,10 @@ export class SchemaVersion {
         return new SchemaVersion(this.model + 1, 0, 0)
     }
 
+    public equals(other: SchemaVersion): boolean {
+        return this.model === other.model && this.revision === other.revision && this.addition === other.addition;
+    }
+
 }
 
 export interface SchemaMetadata {
@@ -101,10 +109,23 @@ export interface SchemaMetadata {
     draftId: DraftId,
 }
 
+export interface SchemaStorePutRequest extends SchemaMetadata {
+    schema: JsonSchema
+}
+
+export interface SchemaStoreGetRequest extends Pick<SchemaMetadata, 'path'>, Partial<Pick<SchemaMetadata, 'schemaVersion'>> {
+
+}
+
+export interface SchemaStoreGetVersionsRequest extends Pick<SchemaMetadata, 'path'> {
+    minVersion?: SchemaVersion
+    maxVersion?: SchemaVersion
+}
+
 export interface SchemaStore {
-    put(path: string, draftId: DraftId, schema: JsonSchema, schemaVersion: SchemaVersion): Promise<SchemaMetadata>
-    get(path: string, version?: SchemaVersion): Promise<JsonSchema>
-    getVersions(path: string): Promise<SchemaVersion[]>
+    put(request: SchemaStorePutRequest): Promise<void>
+    get(request: SchemaStoreGetRequest): Promise<JsonSchema | undefined>
+    getVersions(request: SchemaStoreGetVersionsRequest): Promise<SchemaVersion[]>
 }
 
 export class SchemaError extends Error {
