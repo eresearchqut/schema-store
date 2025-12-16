@@ -1,5 +1,5 @@
 import { SchemaRepository } from "../src";
-import { DraftId, DraftSchemas } from "../src/Drafts";
+import { DraftId, DraftSchemas } from "../src";
 import { SchemaVersion } from "../src/SchemaVersion";
 import {
   SchemaStore,
@@ -69,7 +69,7 @@ describe("SchemaRepository", () => {
 
   beforeEach(() => {
     store = new TestSchemaStore();
-    repo = new SchemaRepository(store, v1);
+    repo = new SchemaRepository({ schemaStore: store, basePath: "", firstVersion: v1 });
   });
 
   describe("createSchema", () => {
@@ -175,7 +175,7 @@ describe("SchemaRepository", () => {
     });
 
     it("throws when updating non-existing path", async () => {
-      const otherRepo = new SchemaRepository(new TestSchemaStore(), v1);
+      const otherRepo = new SchemaRepository({ schemaStore: new TestSchemaStore(), basePath: "", firstVersion: v1 });
       await expect(
         otherRepo.updateSchema({ path: "nope", draftId, updateType: "addition", schema: validSchema })
       ).rejects.toHaveProperty("name", "SchemaNotFoundError");
