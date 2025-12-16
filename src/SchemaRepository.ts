@@ -14,9 +14,14 @@ export interface SchemaCreateRequest {
     schema: JsonSchema
 }
 
+export interface SchemaGetRequest {
+    path: string,
+    schemaVersion?: SchemaVersion
+}
+
 export interface SchemaUpdateRequest {
     path: string,
-    draftId?: DraftId,
+    draftId: DraftId,
     updateType: SchemaUpdateType,
     schema: JsonSchema
 }
@@ -90,6 +95,10 @@ export class SchemaRepository {
 
     }
 
+    private stampSchema(draftId: DraftId, schema: JsonSchema): JsonSchema {
+        return ({...schema, $schema: DraftSchemas[draftId]});
+    }
+
     public async createSchema(request: SchemaCreateRequest): Promise<JsonSchema> {
         const {path, draftId, schema} = request;
         if (await this.schemaStore.get({path})) {
@@ -99,22 +108,32 @@ export class SchemaRepository {
         if (!valid)
             throw new SchemaValidationError(`Schema is not valid for draft ${draftId}`, path, draftId, errors);
         const metadata = {path, draftId, schemaVersion: this.firstVersion};
-        const stampedSchema = {...schema, $schema: DraftSchemas[draftId]};
+        const stampedSchema = this.stampSchema(draftId, schema);
         return this.schemaStore.put({...metadata, schema: stampedSchema})
             .then(() => stampedSchema);
     }
 
-    public async getSchema(path: string, schemaVersion?: SchemaVersion): Promise<JsonSchema> {
+    public async getSchema(request: SchemaGetRequest): Promise<JsonSchema> {
+        const {path, schemaVersion} = request;
         const version = schemaVersion || await this.schemaStore.getLatestVersion({path});
         if (!version)
             throw new SchemaNotFoundError(`Schema with path ${path} not found`, path);
-        const versionedSchema = this.schemaStore.get({path, schemaVersion: version});
+        const versionedSchema = await this.schemaStore.get({path, schemaVersion: version});
         if (!versionedSchema)
             throw new SchemaNotFoundError(`Schema with path ${path} and version ${schemaVersion} not found`, path, schemaVersion);
         return versionedSchema as JsonSchema;
     }
 
-    // public async updateSchema() {
-    //     const currentVersion = this.schemaStore.getLatestVersion({path});
-    // }
+    public async updateSchema(request: SchemaUpdateRequest): Promise<JsonSchema> {
+        const {path, draftId, updateType, schema} = request;
+        const currentVersion = await this.schemaStore.getLatestVersion({path});
+        if (!currentVersion)
+            throw new SchemaNotFoundError(`Schema with path ${path} not found`, path);
+        const stampedSchema = draftId ? this.stampSchema(draftId, schema) : schema;
+        const newVersion = 'addition' === updateType ? currentVersion.bumpAddition()
+            : 'revision' === updateType ? currentVersion.bumpRevision() : currentVersion.bumpModel();
+        return this.schemaStore.put({path, draftId, schemaVersion: newVersion, schema: stampedSchema})
+            .then(() => stampedSchema);
+
+    }
 }
