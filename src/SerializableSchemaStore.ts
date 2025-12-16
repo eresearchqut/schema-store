@@ -2,10 +2,10 @@ import {
     SchemaStore,
     SchemaStoreGetRequest,
     SchemaStoreGetVersionsRequest,
-    SchemaStorePutRequest,
-    SchemaVersion,
-} from "./Model";
+    SchemaStorePutRequest
+} from "./SchemaStore";
 import {JsonSchema} from "json-schema-library";
+import {SchemaVersion} from "./SchemaVersion";
 
 export class SerializableSchemaStore implements SchemaStore {
 

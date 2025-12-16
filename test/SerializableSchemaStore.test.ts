@@ -1,4 +1,5 @@
-import { SerializableSchemaStore, SchemaVersion, JsonSchema } from "../src";
+import { SerializableSchemaStore, JsonSchema } from "../src";
+import {SchemaVersion} from "../src/SchemaVersion";
 
 describe("SerializableSchemaStore", () => {
   let store: SerializableSchemaStore;
