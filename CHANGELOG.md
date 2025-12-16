@@ -1,3 +1,11 @@
+# [1.1.0](https://github.com/eresearchqut/schema-store/compare/v1.0.1...v1.1.0) (2025-12-16)
+
+
+### Features
+
+* SchemaRepository.ts and unit tests ([eb3d551](https://github.com/eresearchqut/schema-store/commit/eb3d5517501b6f728ed385a8c61561484ca4f3f1))
+* SchemaRepository.ts and unit tests ([120d3de](https://github.com/eresearchqut/schema-store/commit/120d3dea4b8bccb15c3d9559b5b996d68fa5fd30))
+
 ## [1.0.1](https://github.com/eresearchqut/schema-store/compare/v1.0.0...v1.0.1) (2025-12-14)
 
 
