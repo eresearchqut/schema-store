@@ -2,6 +2,7 @@ import {
     DraftId,
     SchemaCreateError,
     SchemaMetadata,
+    SchemaNotFoundError,
     Schemas,
     SchemaStore,
     SchemaValidationError,
@@ -31,4 +32,13 @@ export class SchemaRepository {
             .then(() => metadata);
     }
 
+    public async getSchema(path: string, schemaVersion?: SchemaVersion): Promise<JsonSchema> {
+        const version = schemaVersion || await this.schemaStore.getLatestVersion({path});
+        if (!version)
+            throw new SchemaNotFoundError(`Schema with path ${path} not found`, path);
+        const versionedSchema = this.schemaStore.get({path, schemaVersion: version});
+        if (!versionedSchema)
+            throw new SchemaNotFoundError(`Schema with path ${path} and version ${schemaVersion} not found`, path, schemaVersion);
+        return versionedSchema as JsonSchema;
+    }
 }

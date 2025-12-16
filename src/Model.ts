@@ -62,9 +62,9 @@ export class SchemaVersion {
         this.addition = addition;
     }
 
-    public toJSON = (): string => toString();
-
-    public fromJson = (json: string): SchemaVersion => SchemaVersion.fromString(json);
+    // public toJSON = (): string => toString();
+    //
+    // public fromJson = (json: string): SchemaVersion => SchemaVersion.fromString(json);
 
     public toString = (): string => {
         return `${this.model}-${this.revision}-${this.addition}`
@@ -126,6 +126,7 @@ export interface SchemaStore {
     put(request: SchemaStorePutRequest): Promise<void>
     get(request: SchemaStoreGetRequest): Promise<JsonSchema | undefined>
     getVersions(request: SchemaStoreGetVersionsRequest): Promise<SchemaVersion[]>
+    getLatestVersion(request: Pick<SchemaStoreGetRequest, 'path'>): Promise<SchemaVersion | undefined>
 }
 
 export class SchemaError extends Error {

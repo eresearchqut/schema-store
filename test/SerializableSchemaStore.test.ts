@@ -72,4 +72,27 @@ describe("SerializableSchemaStore", () => {
     expect(versions).toHaveLength(1);
     expect(versions[0].toString()).toBe(v2.toString());
   });
+
+  describe("getLatestVersion", () => {
+    it("returns undefined when no versions exist for a path", async () => {
+      const latest = await store.getLatestVersion({ path });
+      expect(latest).toBeUndefined();
+    });
+
+    it("returns the only version when a single version exists", async () => {
+      await store.put({ path, schemaVersion: v1, draftId: "draft-07", schema: schemaV1 });
+      const latest = await store.getLatestVersion({ path });
+      expect(latest).toBeDefined();
+      expect(latest!.toString()).toBe(v1.toString());
+    });
+
+    it("returns the latest version after multiple puts (given overwrite behavior)", async () => {
+      await store.put({ path, schemaVersion: v1, draftId: "draft-07", schema: schemaV1 });
+      await store.put({ path, schemaVersion: v2, draftId: "draft-07", schema: schemaV2 });
+
+      const latest = await store.getLatestVersion({ path });
+      expect(latest).toBeDefined();
+      expect(latest!.toString()).toBe(v2.toString());
+    });
+  });
 });
