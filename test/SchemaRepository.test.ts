@@ -224,10 +224,25 @@ describe("SchemaRepository", () => {
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 const err = e as any;
                 expect(err.name).toBe("SchemaUpdateError");
-                expect(typeof err.getPath).toBe("function");
                 expect(err.getPath()).toBe(path);
-                expect(typeof err.getSchemaUpdateType).toBe("function");
                 expect(err.getSchemaUpdateType()).toBe("addition");
+            }
+        });
+
+        it("validates schema during update and throws SchemaValidationError with details on invalid schema", async () => {
+            const invalidSchema = {type: "not-a-valid-type"} as unknown as JsonSchema;
+            try {
+                await repo.updateSchema({path, draftId, updateType: "addition", schema: invalidSchema});
+                fail("Expected SchemaValidationError");
+            } catch (e) {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                const err = e as any;
+                expect(err.name).toBe("SchemaValidationError");
+                expect(err.getPath()).toBe(path);
+                expect(err.getDraftId()).toBe(draftId);
+                const errors = err.getErrors();
+                expect(Array.isArray(errors)).toBe(true);
+                expect(errors.length).toBeGreaterThan(0);
             }
         });
     });

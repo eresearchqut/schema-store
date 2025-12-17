@@ -161,8 +161,10 @@ export class SchemaRepository {
 
     public async updateSchema(request: SchemaUpdateRequest): Promise<JsonSchema> {
         const {path, updateType, schema} = request;
+
         const {schemaStore} = this.config;
         const currentVersion = await schemaStore.getLatestVersion({path});
+
         if (!currentVersion)
             throw new SchemaNotFoundError(`Schema with path ${path} not found`, path);
 
@@ -174,6 +176,11 @@ export class SchemaRepository {
         }
 
         const draftId = request.draftId || currentDraftId;
+
+        const {valid, errors} = validateSchema(draftId, schema);
+        if (!valid)
+            throw new SchemaValidationError(`Schema is not valid for draft ${draftId}`, path, draftId, errors);
+
         const newVersion = 'addition' === updateType ? currentVersion.bumpAddition()
             : 'revision' === updateType ? currentVersion.bumpRevision() : currentVersion.bumpModel();
         const stampedSchema = draftId ? this.stampSchema(path, draftId, schema, newVersion) : schema;
