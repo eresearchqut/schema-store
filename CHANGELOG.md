@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/eresearchqut/schema-store/compare/v1.1.0...v1.2.0) (2025-12-17)
+
+
+### Features
+
+* Update schema validation and repository base url ([a4ebb52](https://github.com/eresearchqut/schema-store/commit/a4ebb524048e14fc794587b30833ec80167fd21d))
+
 # [1.1.0](https://github.com/eresearchqut/schema-store/compare/v1.0.1...v1.1.0) (2025-12-16)
 
 
