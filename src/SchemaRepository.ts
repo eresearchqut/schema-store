@@ -1,7 +1,7 @@
 import {validateSchema} from "./SchemaUtils";
 import {SchemaVersion} from "./SchemaVersion";
 import {JsonError, JsonSchema} from "json-schema-library";
-import {DraftId, DraftSchemas} from "./Drafts";
+import {DraftId, DraftSchemas, getDraftId} from "./Drafts";
 import {SchemaStore} from "./SchemaStore";
 
 export const DEFAULT_FIRST_VERSION = new SchemaVersion(0, 0, 1);
@@ -63,13 +63,31 @@ export class SchemaNotFoundError extends SchemaRepositoryError {
     constructor(message: string, path: string, schemaVersion?: SchemaVersion) {
         super(message, path, undefined);
         this.name = "SchemaNotFoundError";
-        Object.setPrototypeOf(this, SchemaCreateError.prototype);
+        Object.setPrototypeOf(this, SchemaNotFoundError.prototype);
         this.schemaVersion = schemaVersion;
     }
 
     getSchemaVersion(): SchemaVersion | undefined {
         return this.schemaVersion;
     }
+}
+
+export class SchemaUpdateError extends SchemaRepositoryError {
+
+    private readonly schemaUpdateType?: SchemaUpdateType;
+
+    constructor(message: string, path: string, schemaUpdateType?: SchemaUpdateType) {
+        super(message, path, undefined);
+        this.name = "SchemaUpdateError";
+        Object.setPrototypeOf(this, SchemaUpdateError.prototype);
+        this.schemaUpdateType = schemaUpdateType;
+    }
+
+    getSchemaUpdateType(): SchemaUpdateType | undefined {
+        return this.schemaUpdateType;
+    }
+
+
 }
 
 export class SchemaValidationError extends SchemaRepositoryError {
@@ -91,7 +109,7 @@ export class SchemaValidationError extends SchemaRepositoryError {
 
 export interface SchemaRepositoryConfig {
     schemaStore: SchemaStore,
-    basePath: string,
+    baseUrl: URL,
     firstVersion?: SchemaVersion
 }
 
@@ -101,8 +119,17 @@ export class SchemaRepository {
 
     }
 
-    private stampSchema(draftId: DraftId, schema: JsonSchema): JsonSchema {
-        return ({...schema, $schema: DraftSchemas[draftId]});
+    private schemaId(path: string, version?: SchemaVersion): string {
+        const {baseUrl} = this.config;
+        const pathUrl = new URL(path, baseUrl);
+        const versionUrl =  version ? new URL(version.toString(), pathUrl) : undefined;
+        return versionUrl?.href ?? pathUrl.href;
+    }
+
+    private stampSchema(path: string, draftId: DraftId, schema: JsonSchema, version: SchemaVersion): JsonSchema {
+        const $id = this.schemaId(path, version);
+        const $schema = DraftSchemas[draftId];
+        return {...schema, $schema, $id};
     }
 
     public async createSchema(request: SchemaCreateRequest): Promise<JsonSchema> {
@@ -115,7 +142,7 @@ export class SchemaRepository {
         if (!valid)
             throw new SchemaValidationError(`Schema is not valid for draft ${draftId}`, path, draftId, errors);
         const metadata = {path, draftId, schemaVersion: firstVersion};
-        const stampedSchema = this.stampSchema(draftId, schema);
+        const stampedSchema = this.stampSchema(path, draftId, schema, firstVersion);
         return schemaStore.put({...metadata, schema: stampedSchema})
             .then(() => stampedSchema);
     }
@@ -133,14 +160,24 @@ export class SchemaRepository {
     }
 
     public async updateSchema(request: SchemaUpdateRequest): Promise<JsonSchema> {
-        const {path, draftId, updateType, schema} = request;
+        const {path, updateType, schema} = request;
         const {schemaStore} = this.config;
         const currentVersion = await schemaStore.getLatestVersion({path});
         if (!currentVersion)
             throw new SchemaNotFoundError(`Schema with path ${path} not found`, path);
-        const stampedSchema = draftId ? this.stampSchema(draftId, schema) : schema;
+
+        const currentSchema = await this.getSchema({...request, schemaVersion: currentVersion});
+        const currentDraftId = getDraftId(currentSchema.$schema);
+
+        if (request.draftId && currentDraftId !== request.draftId && updateType !== 'model') {
+            throw new SchemaUpdateError(`Cannot update draft ${currentDraftId} schema with draft ${request.draftId} schema unless the update type is model`, path, updateType);
+        }
+
+        const draftId = request.draftId || currentDraftId;
         const newVersion = 'addition' === updateType ? currentVersion.bumpAddition()
             : 'revision' === updateType ? currentVersion.bumpRevision() : currentVersion.bumpModel();
+        const stampedSchema = draftId ? this.stampSchema(path, draftId, schema, newVersion) : schema;
+
         return schemaStore.put({path, draftId, schemaVersion: newVersion, schema: stampedSchema})
             .then(() => stampedSchema);
 

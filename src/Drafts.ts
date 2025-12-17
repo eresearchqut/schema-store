@@ -37,6 +37,9 @@ export const DraftSchemas : Record<DraftId, string> = {
     "draft-04": 'http://json-schema.org/draft-04/schema#',
 }
 
+export const getDraftId = (schema: string): DraftId | undefined =>
+    Object.keys(DraftSchemas).find((key) => DraftSchemas[key as DraftId] === schema) as DraftId | undefined;
+
 export const DraftMetaCompilers: Record<DraftId, SchemaNode> = {
     'draft-2020-12': compileSchema(DraftMetaSchemas['draft-2020-12'], {drafts: [Drafts['draft-2020-12']]}),
     "draft-2019-09": compileSchema(DraftMetaSchemas['draft-2019-09'], {drafts: [Drafts['draft-2019-09']]}),
