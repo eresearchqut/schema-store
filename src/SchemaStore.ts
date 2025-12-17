@@ -4,12 +4,6 @@ import {
 import {SchemaVersion} from "./SchemaVersion";
 import {DraftId} from "./Drafts";
 
-export interface SchemaStoreMetadata {
-    schemaVersion: SchemaVersion,
-    path: string,
-    draftId: DraftId,
-}
-
 export interface SchemaStorePutRequest  {
     schemaVersion: SchemaVersion,
     path: string,
