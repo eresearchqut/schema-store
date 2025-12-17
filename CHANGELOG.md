@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/eresearchqut/schema-store/compare/v1.2.0...v1.3.0) (2025-12-17)
+
+
+### Features
+
+* validate during update schema ([872ef71](https://github.com/eresearchqut/schema-store/commit/872ef7183a2d53763e6ae0cd34a16148f5b0e05b))
+
 # [1.2.0](https://github.com/eresearchqut/schema-store/compare/v1.1.0...v1.2.0) (2025-12-17)
 
 
