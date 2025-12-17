@@ -72,12 +72,14 @@ describe("SchemaRepository", () => {
     });
 
     describe("createSchema", () => {
-        it("creates a schema at the first version and stamps $schema", async () => {
+        it("creates a schema at the first version and stamps $schema and $id", async () => {
             const created = await repo.createSchema({path, draftId, schema: validSchema});
             expect(created).toBeTruthy();
             // stamped with draft meta $schema
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             expect((created as any).$schema).toBe(DraftSchemas[draftId]);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            expect((created as any).$id).toBe(`https://example.com/${path}/${v1.toString()}`);
 
             const fetched = await repo.getSchema({path});
             expect(fetched).toBeDefined();
@@ -117,17 +119,25 @@ describe("SchemaRepository", () => {
     });
 
     describe("getSchema", () => {
-        it("returns latest when version omitted and specific version when provided", async () => {
+        it("returns latest when version omitted and specific version when provided and includes $schema and $id", async () => {
             const created = await repo.createSchema({path, draftId, schema: validSchema});
             expect(created).toBeTruthy();
 
             // Latest (only v1)
             const latest = await repo.getSchema({path});
             expect(latest).toBeTruthy();
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            expect((latest as any).$schema).toBe(DraftSchemas[draftId]);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            expect((latest as any).$id).toBe(`https://example.com/${path}/${v1.toString()}`);
 
             // By exact version
             const exact = await repo.getSchema({path, schemaVersion: v1});
             expect(exact).toBeTruthy();
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            expect((exact as any).$schema).toBe(DraftSchemas[draftId]);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            expect((exact as any).$id).toBe(`https://example.com/${path}/${v1.toString()}`);
         });
 
         it("throws SchemaNotFoundError when path does not exist and exposes details", async () => {
@@ -150,7 +160,7 @@ describe("SchemaRepository", () => {
             await repo.createSchema({path, draftId, schema: validSchema});
         });
 
-        it("bumps addition version and preserves draft stamping", async () => {
+        it("bumps addition version and preserves draft stamping and stamps $id", async () => {
             const updatedSchema: JsonSchema = {
                 $id: "https://example.com/schema-valid-v2",
                 type: "object",
@@ -168,6 +178,8 @@ describe("SchemaRepository", () => {
 
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             expect((result as any).$schema).toBe(DraftSchemas[draftId]);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            expect((result as any).$id).toBe(`https://example.com/${path}/0-0-2`);
 
             const latestVersion = await store.getLatestVersion({path});
             expect(latestVersion?.toString()).toBe("0-0-2");

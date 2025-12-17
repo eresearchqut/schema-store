@@ -119,7 +119,7 @@ export class SchemaRepository {
 
     }
 
-    private schemaId(path: string, version?: SchemaVersion): string {
+    private schemaId(path: string, version: SchemaVersion): string {
         const {baseUrl} = this.config;
         const pathUrl = new URL(path, baseUrl);
         const versionUrl =  version ? new URL(version.toString(), pathUrl) : undefined;
