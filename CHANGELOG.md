@@ -1,3 +1,10 @@
+## [1.3.2](https://github.com/eresearchqut/schema-store/compare/v1.3.1...v1.3.2) (2025-12-18)
+
+
+### Bug Fixes
+
+* export repository types and fix $id ([ae52c16](https://github.com/eresearchqut/schema-store/commit/ae52c1653db7aff1ad7feaf6fd3fea855ac83dca))
+
 ## [1.3.1](https://github.com/eresearchqut/schema-store/compare/v1.3.0...v1.3.1) (2025-12-17)
 
 
