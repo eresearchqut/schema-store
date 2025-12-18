@@ -1,23 +1,23 @@
-export {type DraftId, DraftSchemas} from "./Drafts";
+export {DraftId, DraftSchemas} from "./Drafts";
 export {
     SchemaRepository,
-    type SchemaRepositoryConfig,
+    SchemaRepositoryConfig,
     SchemaCreateError,
     SchemaCreateRequest,
-    type SchemaGetRequest,
-    type SchemaUpdateRequest,
-    type SchemaUpdateType,
+    SchemaGetRequest,
+    SchemaUpdateRequest,
+    SchemaUpdateType,
     SchemaRepositoryError,
     SchemaUpdateError,
     SchemaValidationError,
     SchemaNotFoundError
 } from "./SchemaRepository";
 export {
-    type ISchemaStore,
-    type SchemaStoreGetRequest,
-    type SchemaStoreGetVersionsRequest,
-    type SchemaStorePutRequest,
-    type SchemaStoreGetLatestVersionsRequest
+    ISchemaStore,
+    SchemaStoreGetRequest,
+    SchemaStoreGetVersionsRequest,
+    SchemaStorePutRequest,
+    SchemaStoreGetLatestVersionsRequest
 } from "./SchemaStore";
 export {SchemaVersion} from "./SchemaVersion";
 export {SerializableSchemaStore} from "./SerializableSchemaStore";
