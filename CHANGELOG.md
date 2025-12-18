@@ -1,3 +1,10 @@
+## [1.3.4](https://github.com/eresearchqut/schema-store/compare/v1.3.3...v1.3.4) (2025-12-18)
+
+
+### Bug Fixes
+
+* export schema version class ([0669390](https://github.com/eresearchqut/schema-store/commit/0669390d6c2521aea9c7867ebd36f3fa5a251307))
+
 ## [1.3.3](https://github.com/eresearchqut/schema-store/compare/v1.3.2...v1.3.3) (2025-12-18)
 
 
