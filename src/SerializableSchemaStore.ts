@@ -1,5 +1,5 @@
 import {
-    SchemaStore,
+    ISchemaStore,
     SchemaStoreGetRequest,
     SchemaStoreGetVersionsRequest,
     SchemaStorePutRequest
@@ -7,7 +7,7 @@ import {
 import {JsonSchema} from "json-schema-library";
 import {SchemaVersion} from "./SchemaVersion";
 
-export class SerializableSchemaStore implements SchemaStore {
+export class SerializableSchemaStore implements ISchemaStore {
 
     private store: Record<string, Record<string, JsonSchema>> = {};
 

@@ -13,7 +13,7 @@ export {
     SchemaNotFoundError
 } from "./SchemaRepository";
 export {
-    SchemaStore,
+    type ISchemaStore,
     type SchemaStoreGetRequest,
     type SchemaStoreGetVersionsRequest,
     type SchemaStorePutRequest,

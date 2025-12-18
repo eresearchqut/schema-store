@@ -2,7 +2,7 @@ import {
     DraftId,
     DraftSchemas,
     SchemaRepository,
-    SchemaStore,
+    ISchemaStore,
     SchemaStoreGetRequest,
     SchemaStoreGetVersionsRequest,
     SchemaStorePutRequest,
@@ -11,7 +11,7 @@ import {
 import {JsonSchema} from "json-schema-library";
 
 // A simple in-memory store for testing that preserves all versions per path
-class TestSchemaStore implements SchemaStore {
+class TestSchemaStore implements ISchemaStore {
     private store: Record<string, Record<string, JsonSchema>> = {};
 
     async put(request: SchemaStorePutRequest): Promise<JsonSchema> {

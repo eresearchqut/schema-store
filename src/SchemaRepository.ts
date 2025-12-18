@@ -2,7 +2,7 @@ import {validateSchema} from "./SchemaUtils";
 import {SchemaVersion} from "./SchemaVersion";
 import {JsonError, JsonSchema} from "json-schema-library";
 import {DraftId, DraftSchemas, getDraftId} from "./Drafts";
-import {SchemaStore} from "./SchemaStore";
+import {ISchemaStore} from "./SchemaStore";
 
 export const DEFAULT_FIRST_VERSION = new SchemaVersion(0, 0, 1);
 
@@ -108,7 +108,7 @@ export class SchemaValidationError extends SchemaRepositoryError {
 }
 
 export interface SchemaRepositoryConfig {
-    schemaStore: SchemaStore,
+    schemaStore: ISchemaStore,
     baseUrl: URL,
     firstVersion?: SchemaVersion
 }
