@@ -1,22 +1,25 @@
-import {DraftId, DraftSchemas, SchemaRepository} from "../src";
-import {SchemaVersion} from "../src/SchemaVersion";
 import {
+    DraftId,
+    DraftSchemas,
+    SchemaRepository,
     SchemaStore,
     SchemaStoreGetRequest,
     SchemaStoreGetVersionsRequest,
     SchemaStorePutRequest,
-} from "../src/SchemaStore";
+    SchemaVersion,
+} from "../src";
 import {JsonSchema} from "json-schema-library";
 
 // A simple in-memory store for testing that preserves all versions per path
 class TestSchemaStore implements SchemaStore {
     private store: Record<string, Record<string, JsonSchema>> = {};
 
-    async put(request: SchemaStorePutRequest): Promise<void> {
+    async put(request: SchemaStorePutRequest): Promise<JsonSchema> {
         const {path, schemaVersion, schema} = request;
         const versions = this.store[path] || {};
         versions[schemaVersion.toString()] = schema;
         this.store[path] = versions;
+        return schema;
     }
 
     async get(request: SchemaStoreGetRequest): Promise<JsonSchema | undefined> {
