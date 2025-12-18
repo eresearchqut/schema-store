@@ -1,3 +1,10 @@
+## [1.3.7](https://github.com/eresearchqut/schema-store/compare/v1.3.6...v1.3.7) (2025-12-18)
+
+
+### Bug Fixes
+
+* testing as es6 export ([7691010](https://github.com/eresearchqut/schema-store/commit/7691010cf024cc8e4db437ed4197665d9c8879c6))
+
 ## [1.3.6](https://github.com/eresearchqut/schema-store/compare/v1.3.5...v1.3.6) (2025-12-18)
 
 
