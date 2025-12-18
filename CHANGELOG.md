@@ -1,3 +1,10 @@
+## [1.3.12](https://github.com/eresearchqut/schema-store/compare/v1.3.11...v1.3.12) (2025-12-18)
+
+
+### Bug Fixes
+
+* trying to sort exports ([2c02b4b](https://github.com/eresearchqut/schema-store/commit/2c02b4b16da6d6c61b09f8b94c0912b850e60646))
+
 ## [1.3.11](https://github.com/eresearchqut/schema-store/compare/v1.3.10...v1.3.11) (2025-12-18)
 
 
