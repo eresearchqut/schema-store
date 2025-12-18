@@ -1,4 +1,5 @@
-import {validateSchema, validate, DraftId, JsonSchema} from "../src";
+import {validateSchema, validate, DraftId} from "../src";
+import {JsonSchema} from "json-schema-library";
 
 describe('Schema Util Tests', () => {
 
