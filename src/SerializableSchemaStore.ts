@@ -11,9 +11,10 @@ export class SerializableSchemaStore implements SchemaStore {
 
     private store: Record<string, Record<string, JsonSchema>> = {};
 
-    async put(request: SchemaStorePutRequest): Promise<void> {
+    async put(request: SchemaStorePutRequest): Promise<JsonSchema> {
         const {schemaVersion, path, schema} = request;
         this.store[path] = {[schemaVersion.toString()]: schema};
+        return schema;
     }
 
     async get(request: SchemaStoreGetRequest): Promise<JsonSchema | undefined> {

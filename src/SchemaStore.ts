@@ -25,7 +25,7 @@ export interface SchemaStoreGetLatestVersionsRequest  {
 }
 
 export interface SchemaStore {
-    put(request: SchemaStorePutRequest): Promise<void>
+    put(request: SchemaStorePutRequest): Promise<JsonSchema>
     get(request: SchemaStoreGetRequest): Promise<JsonSchema | undefined>
     getVersions(request: SchemaStoreGetVersionsRequest): Promise<SchemaVersion[]>
     getLatestVersion(request: SchemaStoreGetLatestVersionsRequest): Promise<SchemaVersion | undefined>
