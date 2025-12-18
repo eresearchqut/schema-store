@@ -1,3 +1,10 @@
+## [1.3.1](https://github.com/eresearchqut/schema-store/compare/v1.3.0...v1.3.1) (2025-12-17)
+
+
+### Bug Fixes
+
+* export schema store interface ([37ad05e](https://github.com/eresearchqut/schema-store/commit/37ad05e200f472352bcd5a7a45d7642c7980d093))
+
 # [1.3.0](https://github.com/eresearchqut/schema-store/compare/v1.2.0...v1.3.0) (2025-12-17)
 
 
