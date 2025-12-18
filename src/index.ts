@@ -7,5 +7,6 @@ export {
     SchemaStoreGetVersionsRequest,
     SchemaStorePutRequest
 } from "./SchemaStore";
+export {SchemaVersion} from "./SchemaVersion";
 export {SerializableSchemaStore} from "./SerializableSchemaStore";
 export {validateSchema, validate} from "./SchemaUtils"
