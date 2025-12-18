@@ -12,13 +12,14 @@ export {
     SchemaValidationError,
     SchemaNotFoundError
 } from "./SchemaRepository";
-export {
+import type {
     ISchemaStore,
     SchemaStoreGetRequest,
     SchemaStoreGetVersionsRequest,
     SchemaStorePutRequest,
     SchemaStoreGetLatestVersionsRequest
 } from "./SchemaStore";
+export type {ISchemaStore, SchemaStoreGetRequest, SchemaStoreGetVersionsRequest, SchemaStorePutRequest, SchemaStoreGetLatestVersionsRequest};
 export {SchemaVersion} from "./SchemaVersion";
 export {SerializableSchemaStore} from "./SerializableSchemaStore";
 export {validateSchema, validate} from "./SchemaUtils"
