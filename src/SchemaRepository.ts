@@ -121,9 +121,8 @@ export class SchemaRepository {
 
     private schemaId(path: string, version: SchemaVersion): string {
         const {baseUrl} = this.config;
-        const pathUrl = new URL(path, baseUrl);
-        const versionUrl =  version ? new URL(version.toString(), pathUrl) : undefined;
-        return versionUrl?.href ?? pathUrl.href;
+        const versionUrl = new URL(`/${path}/${version.toString()}`, baseUrl);
+        return versionUrl?.href;
     }
 
     private stampSchema(path: string, draftId: DraftId, schema: JsonSchema, version: SchemaVersion): JsonSchema {
@@ -183,8 +182,7 @@ export class SchemaRepository {
 
         const newVersion = 'addition' === updateType ? currentVersion.bumpAddition()
             : 'revision' === updateType ? currentVersion.bumpRevision() : currentVersion.bumpModel();
-        const stampedSchema = draftId ? this.stampSchema(path, draftId, schema, newVersion) : schema;
-
+        const stampedSchema = this.stampSchema(path, draftId, schema, newVersion);
         return schemaStore.put({path, draftId, schemaVersion: newVersion, schema: stampedSchema})
             .then(() => stampedSchema);
 
