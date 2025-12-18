@@ -4,6 +4,14 @@
   "description": "A TypeScript library providing a generic validation and store operations for json schemas.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "module": "dist/index.mjs",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
   "files": [
     "dist"
   ],
@@ -11,7 +19,7 @@
     "access": "public"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "tsup",
     "test": "node --experimental-vm-modules node_modules/.bin/jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
@@ -32,12 +40,13 @@
     "semantic-release": "^25.0.2",
     "ts-jest": "^29.4.6",
     "ts-node": "^10.9.2",
+    "tsup": "^8.5.1",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.49.0"
   },
   "peerDependencies": {
-    "lodash": "^4.17.20",
-    "json-schema-library": "^10.5.2"
+    "json-schema-library": "^10.5.2",
+    "lodash": "^4.17.20"
   },
   "repository": {
     "type": "git",
