@@ -1,3 +1,10 @@
+## [1.3.3](https://github.com/eresearchqut/schema-store/compare/v1.3.2...v1.3.3) (2025-12-18)
+
+
+### Bug Fixes
+
+* don't reexport dependencies ([a700744](https://github.com/eresearchqut/schema-store/commit/a7007448e0be3b5f3d51e7a0318e27e3916f8d11))
+
 ## [1.3.2](https://github.com/eresearchqut/schema-store/compare/v1.3.1...v1.3.2) (2025-12-18)
 
 
