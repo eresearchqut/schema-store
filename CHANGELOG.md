@@ -1,3 +1,10 @@
+## [1.3.18](https://github.com/eresearchqut/schema-store/compare/v1.3.17...v1.3.18) (2025-12-22)
+
+
+### Bug Fixes
+
+* don't minify bundle ([389cd00](https://github.com/eresearchqut/schema-store/commit/389cd006431e9fd06acdc4e382b95e7a70f92e62))
+
 ## [1.3.17](https://github.com/eresearchqut/schema-store/compare/v1.3.16...v1.3.17) (2025-12-18)
 
 
