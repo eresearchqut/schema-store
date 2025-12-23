@@ -1,3 +1,10 @@
+## [1.3.19](https://github.com/eresearchqut/schema-store/compare/v1.3.18...v1.3.19) (2025-12-23)
+
+
+### Bug Fixes
+
+* use get latest version to check for schema existence ([caf1a32](https://github.com/eresearchqut/schema-store/commit/caf1a32cf4463d495dba2586acdf43506335091c))
+
 ## [1.3.18](https://github.com/eresearchqut/schema-store/compare/v1.3.17...v1.3.18) (2025-12-22)
 
 
