@@ -134,7 +134,7 @@ export class SchemaRepository {
     public async createSchema(request: SchemaCreateRequest): Promise<JsonSchema> {
         const {path, draftId, schema} = request;
         const {firstVersion = DEFAULT_FIRST_VERSION, schemaStore} = this.config;
-        if (await schemaStore.get({path})) {
+        if (await schemaStore.getLatestVersion({path})) {
             return Promise.reject(new SchemaCreateError(`Schema with path ${path} already exists`, path, draftId));
         }
         const {valid, errors} = validateSchema(draftId, schema);
