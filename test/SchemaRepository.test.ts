@@ -158,6 +158,23 @@ describe("SchemaRepository", () => {
         });
     });
 
+    describe("getLatestVersion", () => {
+        it("returns the latest version of a schema", async () => {
+            await repo.createSchema({path, draftId, schema: validSchema});
+            const latest = await repo.getLatestVersion(path);
+            expect(latest?.toString()).toBe(v1.toString());
+
+            await repo.updateSchema({path, draftId, updateType: "addition", schema: validSchema});
+            const updatedLatest = await repo.getLatestVersion(path);
+            expect(updatedLatest?.toString()).toBe("0-0-2");
+        });
+
+        it("returns undefined when the path does not exist", async () => {
+            const latest = await repo.getLatestVersion("non-existent");
+            expect(latest).toBeUndefined();
+        });
+    });
+
     describe("updateSchema", () => {
         beforeEach(async () => {
             await repo.createSchema({path, draftId, schema: validSchema});

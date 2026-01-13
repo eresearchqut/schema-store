@@ -158,6 +158,11 @@ export class SchemaRepository {
         return versionedSchema as JsonSchema;
     }
 
+    public async getLatestVersion(path: string): Promise<SchemaVersion | undefined> {
+        const {schemaStore} = this.config;
+        return schemaStore.getLatestVersion({path});
+    }
+
     public async updateSchema(request: SchemaUpdateRequest): Promise<JsonSchema> {
         const {path, updateType, schema} = request;
 
