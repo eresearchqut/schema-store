@@ -1,3 +1,10 @@
+## [1.4.1](https://github.com/eresearchqut/schema-store/compare/v1.4.0...v1.4.1) (2026-01-13)
+
+
+### Bug Fixes
+
+* Throw exception from repo when schema not found ([e31a455](https://github.com/eresearchqut/schema-store/commit/e31a455bc73bb5b48f536bc8532fe8ad124058a6))
+
 # [1.4.0](https://github.com/eresearchqut/schema-store/compare/v1.3.19...v1.4.0) (2026-01-13)
 
 
