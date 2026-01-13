@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/eresearchqut/schema-store/compare/v1.3.19...v1.4.0) (2026-01-13)
+
+
+### Features
+
+* Added get latest version to the repository ([4c2f531](https://github.com/eresearchqut/schema-store/commit/4c2f531cd0492b5fc7eaecfa09f7279311121f4b))
+
 ## [1.3.19](https://github.com/eresearchqut/schema-store/compare/v1.3.18...v1.3.19) (2025-12-23)
 
 
