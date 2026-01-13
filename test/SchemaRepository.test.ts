@@ -169,9 +169,16 @@ describe("SchemaRepository", () => {
             expect(updatedLatest?.toString()).toBe("0-0-2");
         });
 
-        it("returns undefined when the path does not exist", async () => {
-            const latest = await repo.getLatestVersion("non-existent");
-            expect(latest).toBeUndefined();
+        it("throws SchemaNotFoundError when the path does not exist", async () => {
+            try {
+                await repo.getLatestVersion("non-existent");
+                fail("Expected SchemaNotFoundError");
+            } catch (e) {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                const err = e as any;
+                expect(err.name).toBe("SchemaNotFoundError");
+                expect(err.getPath()).toBe("non-existent");
+            }
         });
     });
 

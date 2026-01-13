@@ -158,20 +158,19 @@ export class SchemaRepository {
         return versionedSchema as JsonSchema;
     }
 
-    public async getLatestVersion(path: string): Promise<SchemaVersion | undefined> {
+    public async getLatestVersion(path: string): Promise<SchemaVersion> {
         const {schemaStore} = this.config;
-        return schemaStore.getLatestVersion({path});
+        const latestVersion = await schemaStore.getLatestVersion({path});
+        if (!latestVersion)
+            throw new SchemaNotFoundError(`Schema with path ${path} not found`, path);
+        return latestVersion;
     }
 
     public async updateSchema(request: SchemaUpdateRequest): Promise<JsonSchema> {
         const {path, updateType, schema} = request;
 
         const {schemaStore} = this.config;
-        const currentVersion = await schemaStore.getLatestVersion({path});
-
-        if (!currentVersion)
-            throw new SchemaNotFoundError(`Schema with path ${path} not found`, path);
-
+        const currentVersion = await this.getLatestVersion(path);
         const currentSchema = await this.getSchema({...request, schemaVersion: currentVersion});
         const currentDraftId = getDraftId(currentSchema.$schema);
 
