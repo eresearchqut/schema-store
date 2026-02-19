@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/eresearchqut/schema-store/compare/v1.4.1...v1.5.0) (2026-02-19)
+
+
+### Features
+
+* tsup -> tsdown for packaging ([038b44a](https://github.com/eresearchqut/schema-store/commit/038b44a3a043c307b1ef60f3d2c0c1a5ecd5531b))
+
 ## [1.4.1](https://github.com/eresearchqut/schema-store/compare/v1.4.0...v1.4.1) (2026-01-13)
 
 
