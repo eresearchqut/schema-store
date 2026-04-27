@@ -1,14 +1,16 @@
-import {
+import type {JsonSchema} from "json-schema-library";
+
+import type {
     DraftId,
-    DraftSchemas,
-    SchemaRepository,
     ISchemaStore,
     SchemaStoreGetRequest,
     SchemaStoreGetVersionsRequest,
-    SchemaStorePutRequest,
+    SchemaStorePutRequest} from "../src";
+import {
+    DraftSchemas,
+    SchemaRepository,
     SchemaVersion,
 } from "../src";
-import {JsonSchema} from "json-schema-library";
 
 // A simple in-memory store for testing that preserves all versions per path
 class TestSchemaStore implements ISchemaStore {
@@ -90,34 +92,22 @@ describe("SchemaRepository", () => {
 
         it("fails if a schema already exists at the path and exposes details via getters", async () => {
             await repo.createSchema({path, draftId, schema: validSchema});
-            try {
-                await repo.createSchema({path, draftId, schema: validSchema});
-                fail("Expected SchemaCreateError");
-            } catch (e) {
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                const err = e as any;
-                expect(err.name).toBe("SchemaCreateError");
-                expect(err.getPath()).toBe(path);
-                expect(err.getDraftId()).toBe(draftId);
-            }
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const err = await repo.createSchema({path, draftId, schema: validSchema}).catch((e: unknown) => e) as any;
+            expect(err.name).toBe("SchemaCreateError");
+            expect(err.getPath()).toBe(path);
+            expect(err.getDraftId()).toBe(draftId);
         });
 
         it("validates schema against draft and throws on invalid schema with details", async () => {
             const invalidSchema = {type: "not-a-valid-type"} as unknown as JsonSchema;
-            try {
-                await repo.createSchema({path, draftId, schema: invalidSchema});
-                fail("Expected SchemaValidationError");
-            } catch (e) {
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                const err = e as any;
-                expect(err.name).toBe("SchemaValidationError");
-                expect(err.getPath()).toBe(path);
-                expect(err.getDraftId()).toBe(draftId);
-
-                const errors = err.getErrors();
-                expect(Array.isArray(errors)).toBe(true);
-                expect(errors.length).toBeGreaterThan(0);
-            }
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const err = await repo.createSchema({path, draftId, schema: invalidSchema}).catch((e: unknown) => e) as any;
+            expect(err.name).toBe("SchemaValidationError");
+            expect(err.getPath()).toBe(path);
+            expect(err.getDraftId()).toBe(draftId);
+            expect(Array.isArray(err.getErrors())).toBe(true);
+            expect(err.getErrors().length).toBeGreaterThan(0);
         });
     });
 
@@ -145,16 +135,11 @@ describe("SchemaRepository", () => {
 
         it("throws SchemaNotFoundError when path does not exist and exposes details", async () => {
             const missingPath = "missing/path";
-            try {
-                await repo.getSchema({path: missingPath});
-                fail("Expected SchemaNotFoundError");
-            } catch (e) {
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                const err = e as any;
-                expect(err.name).toBe("SchemaNotFoundError");
-                expect(err.getPath()).toBe(missingPath);
-                expect(err.getSchemaVersion()).toBeUndefined();
-            }
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const err = await repo.getSchema({path: missingPath}).catch((e: unknown) => e) as any;
+            expect(err.name).toBe("SchemaNotFoundError");
+            expect(err.getPath()).toBe(missingPath);
+            expect(err.getSchemaVersion()).toBeUndefined();
         });
     });
 
@@ -170,15 +155,10 @@ describe("SchemaRepository", () => {
         });
 
         it("throws SchemaNotFoundError when the path does not exist", async () => {
-            try {
-                await repo.getLatestVersion("non-existent");
-                fail("Expected SchemaNotFoundError");
-            } catch (e) {
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                const err = e as any;
-                expect(err.name).toBe("SchemaNotFoundError");
-                expect(err.getPath()).toBe("non-existent");
-            }
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const err = await repo.getLatestVersion("non-existent").catch((e: unknown) => e) as any;
+            expect(err.name).toBe("SchemaNotFoundError");
+            expect(err.getPath()).toBe("non-existent");
         });
     });
 
@@ -243,46 +223,30 @@ describe("SchemaRepository", () => {
                 baseUrl: new URL("https://example.com/"),
                 firstVersion: v1
             });
-            try {
-                await otherRepo.updateSchema({path: "nope", draftId, updateType: "addition", schema: validSchema});
-                fail("Expected SchemaNotFoundError");
-            } catch (e) {
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                const err = e as any;
-                expect(err.name).toBe("SchemaNotFoundError");
-                expect(err.getPath()).toBe("nope");
-            }
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const err = await otherRepo.updateSchema({path: "nope", draftId, updateType: "addition", schema: validSchema}).catch((e: unknown) => e) as any;
+            expect(err.name).toBe("SchemaNotFoundError");
+            expect(err.getPath()).toBe("nope");
         });
 
         it("throws SchemaUpdateError on draft mismatch for non-model update and exposes details", async () => {
             const mismatchedDraft: DraftId = "draft-06";
-            try {
-                await repo.updateSchema({path, draftId: mismatchedDraft, updateType: "addition", schema: validSchema});
-                fail("Expected SchemaUpdateError");
-            } catch (e) {
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                const err = e as any;
-                expect(err.name).toBe("SchemaUpdateError");
-                expect(err.getPath()).toBe(path);
-                expect(err.getSchemaUpdateType()).toBe("addition");
-            }
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const err = await repo.updateSchema({path, draftId: mismatchedDraft, updateType: "addition", schema: validSchema}).catch((e: unknown) => e) as any;
+            expect(err.name).toBe("SchemaUpdateError");
+            expect(err.getPath()).toBe(path);
+            expect(err.getSchemaUpdateType()).toBe("addition");
         });
 
         it("validates schema during update and throws SchemaValidationError with details on invalid schema", async () => {
             const invalidSchema = {type: "not-a-valid-type"} as unknown as JsonSchema;
-            try {
-                await repo.updateSchema({path, draftId, updateType: "addition", schema: invalidSchema});
-                fail("Expected SchemaValidationError");
-            } catch (e) {
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                const err = e as any;
-                expect(err.name).toBe("SchemaValidationError");
-                expect(err.getPath()).toBe(path);
-                expect(err.getDraftId()).toBe(draftId);
-                const errors = err.getErrors();
-                expect(Array.isArray(errors)).toBe(true);
-                expect(errors.length).toBeGreaterThan(0);
-            }
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const err = await repo.updateSchema({path, draftId, updateType: "addition", schema: invalidSchema}).catch((e: unknown) => e) as any;
+            expect(err.name).toBe("SchemaValidationError");
+            expect(err.getPath()).toBe(path);
+            expect(err.getDraftId()).toBe(draftId);
+            expect(Array.isArray(err.getErrors())).toBe(true);
+            expect(err.getErrors().length).toBeGreaterThan(0);
         });
     });
 });

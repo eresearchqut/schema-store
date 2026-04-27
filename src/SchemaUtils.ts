@@ -1,6 +1,9 @@
 
-import {compileSchema, JsonSchema} from "json-schema-library";
-import {DraftId, Drafts, DraftMetaCompilers} from "./Drafts";
+import type { JsonSchema} from "json-schema-library";
+import {compileSchema} from "json-schema-library";
+
+import type {DraftId} from "./Drafts";
+import { DraftMetaCompilers,Drafts} from "./Drafts";
 
 export const validateSchema = (draftId: DraftId, schema: JsonSchema) => {
     const metaCompiler = DraftMetaCompilers[draftId];

@@ -1,6 +1,6 @@
-import { SerializableSchemaStore } from "../src";
-import {SchemaVersion} from "../src/SchemaVersion";
-import {JsonSchema} from "json-schema-library";
+import type {JsonSchema} from "json-schema-library";
+
+import { SchemaVersion,SerializableSchemaStore } from "../src";
 
 describe("SerializableSchemaStore", () => {
   let store: SerializableSchemaStore;
@@ -37,7 +37,6 @@ describe("SerializableSchemaStore", () => {
   });
 
   it("get() without version returns the latest (by sort) version available", async () => {
-    // Note: current implementation overwrites previous versions for the same path
     await store.put({ path, schemaVersion: v1, draftId: "draft-07", schema: schemaV1 });
     await store.put({ path, schemaVersion: v2, draftId: "draft-07", schema: schemaV2 });
 
@@ -45,18 +44,26 @@ describe("SerializableSchemaStore", () => {
     expect(fetchedLatest).toEqual(schemaV2);
   });
 
-  it("getVersions() returns the list of available versions for a path (sorted desc)", async () => {
-    // Since current store overwrites per path, only the last version remains
+  it("get() retrieves an older version when explicitly requested", async () => {
+    await store.put({ path, schemaVersion: v1, draftId: "draft-07", schema: schemaV1 });
+    await store.put({ path, schemaVersion: v2, draftId: "draft-07", schema: schemaV2 });
+
+    const fetchedV1 = await store.get({ path, schemaVersion: v1 });
+    expect(fetchedV1).toEqual(schemaV1);
+  });
+
+  it("getVersions() returns all stored versions for a path (sorted desc)", async () => {
     await store.put({ path, schemaVersion: v1, draftId: "draft-07", schema: schemaV1 });
     await store.put({ path, schemaVersion: v2, draftId: "draft-07", schema: schemaV2 });
 
     const versions = await store.getVersions({ path });
-    expect(Array.isArray(versions)).toBe(true);
-    expect(versions).toHaveLength(1);
+    expect(versions).toHaveLength(2);
     expect(versions[0].toString()).toBe(v2.toString());
+    expect(versions[1].toString()).toBe(v1.toString());
   });
 
   it("marshall() serializes the internal store and unmarshall() restores it", async () => {
+    await store.put({ path, schemaVersion: v1, draftId: "draft-07", schema: schemaV1 });
     await store.put({ path, schemaVersion: v2, draftId: "draft-07", schema: schemaV2 });
 
     const json = store.marshall();
@@ -66,13 +73,16 @@ describe("SerializableSchemaStore", () => {
     const restored = new SerializableSchemaStore();
     restored.unmarshall(json);
 
-    // The restored store should behave the same
-    const fetched = await restored.get({ path });
-    expect(fetched).toEqual(schemaV2);
+    const fetchedLatest = await restored.get({ path });
+    expect(fetchedLatest).toEqual(schemaV2);
+
+    const fetchedV1 = await restored.get({ path, schemaVersion: v1 });
+    expect(fetchedV1).toEqual(schemaV1);
 
     const versions = await restored.getVersions({ path });
-    expect(versions).toHaveLength(1);
+    expect(versions).toHaveLength(2);
     expect(versions[0].toString()).toBe(v2.toString());
+    expect(versions[1].toString()).toBe(v1.toString());
   });
 
   describe("getLatestVersion", () => {
@@ -88,7 +98,7 @@ describe("SerializableSchemaStore", () => {
       expect(latest!.toString()).toBe(v1.toString());
     });
 
-    it("returns the latest version after multiple puts (given overwrite behavior)", async () => {
+    it("returns the latest version after multiple puts", async () => {
       await store.put({ path, schemaVersion: v1, draftId: "draft-07", schema: schemaV1 });
       await store.put({ path, schemaVersion: v2, draftId: "draft-07", schema: schemaV2 });
 

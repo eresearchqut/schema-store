@@ -1,8 +1,10 @@
+import type {JsonError, JsonSchema} from "json-schema-library";
+
+import type {DraftId} from "./Drafts";
+import { DraftSchemas, getDraftId} from "./Drafts";
+import type {ISchemaStore} from "./SchemaStore";
 import {validateSchema} from "./SchemaUtils";
 import {SchemaVersion} from "./SchemaVersion";
-import {JsonError, JsonSchema} from "json-schema-library";
-import {DraftId, DraftSchemas, getDraftId} from "./Drafts";
-import {ISchemaStore} from "./SchemaStore";
 
 export const DEFAULT_FIRST_VERSION = new SchemaVersion(0, 0, 1);
 

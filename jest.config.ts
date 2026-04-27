@@ -3,27 +3,29 @@ import type { Config } from '@jest/types';
 const config: Config.InitialOptions = {
     preset: 'ts-jest',
     testEnvironment: 'node',
+    transform: {
+        '^.+\\.tsx?$': ['ts-jest', { tsconfig: 'tsconfig.test.json' }],
+    },
     roots: ['<rootDir>/src', '<rootDir>/test'],
     testMatch: ['**/*.test.ts', '**/*.spec.ts'],
-    collectCoverage: false, // Set to true by default if you want coverage on every run
+    collectCoverage: false,
     collectCoverageFrom: [
         'src/**/*.ts',
         '!src/**/*.d.ts',
         '!src/**/*.interface.ts',
-        '!src/**/index.ts', // Typically just exports, can be excluded
+        '!src/**/index.ts',
     ],
     coverageDirectory: 'coverage',
     coverageReporters: [
-        'text',           // Console output
-        'text-summary',   // Summary in console
-        'html',          // HTML report in coverage/
-        'lcov',          // For CI/CD tools
-        'json',          // JSON format
+        'text',
+        'text-summary',
+        'html',
+        'lcov',
+        'json',
     ],
     moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
     verbose: true,
     testTimeout: 60000,
-    transform: {}
 };
 
 export default config;

@@ -1,13 +1,14 @@
+import type {
+    Draft,
+    SchemaNode} from "json-schema-library";
 import {
+    compileSchema,
     draft04,
     draft06,
     draft07,
     draft2019,
     draft2020,
-    Draft,
-    SchemaNode,
     remotes,
-    compileSchema,
 } from "json-schema-library";
 
 export type DraftId = 'draft-2020-12' | 'draft-2019-09' | 'draft-07' | 'draft-06' | 'draft-04';

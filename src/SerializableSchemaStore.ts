@@ -1,10 +1,11 @@
-import {
+import type {JsonSchema} from "json-schema-library";
+
+import type {
     ISchemaStore,
     SchemaStoreGetRequest,
     SchemaStoreGetVersionsRequest,
     SchemaStorePutRequest
 } from "./SchemaStore";
-import {JsonSchema} from "json-schema-library";
 import {SchemaVersion} from "./SchemaVersion";
 
 export class SerializableSchemaStore implements ISchemaStore {
@@ -13,7 +14,7 @@ export class SerializableSchemaStore implements ISchemaStore {
 
     async put(request: SchemaStorePutRequest): Promise<JsonSchema> {
         const {schemaVersion, path, schema} = request;
-        this.store[path] = {[schemaVersion.toString()]: schema};
+        this.store[path] = {...(this.store[path] ?? {}), [schemaVersion.toString()]: schema};
         return schema;
     }
 

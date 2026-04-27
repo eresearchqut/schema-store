@@ -1,8 +1,9 @@
-import {
+import type {
     JsonSchema
 } from "json-schema-library";
-import {SchemaVersion} from "./SchemaVersion";
-import {DraftId} from "./Drafts";
+
+import type {DraftId} from "./Drafts";
+import type {SchemaVersion} from "./SchemaVersion";
 
 export interface SchemaStorePutRequest  {
     schemaVersion: SchemaVersion,
