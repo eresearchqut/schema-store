@@ -8,8 +8,8 @@ import {
     draft07,
     draft2019,
     draft2020,
-    remotes,
 } from "json-schema-library";
+import { remotes } from "json-schema-library/remotes";
 
 export type DraftId = 'draft-2020-12' | 'draft-2019-09' | 'draft-07' | 'draft-06' | 'draft-04';
 
@@ -21,13 +21,20 @@ export const Drafts: Record<DraftId, Draft> = {
     'draft-2020-12': draft2020
 }
 
-// eslint-disable-next-line  @typescript-eslint/no-explicit-any
+// remotes is now a JsonSchema[]; rebuild the URI-keyed lookup used by DraftMetaSchemas
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const remotesByUri: Record<string, any> = Object.fromEntries(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (remotes as any[]).map((r: any) => [r.$id ?? r.id, r])
+);
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const DraftMetaSchemas : Record<DraftId, any> = {
-    'draft-2020-12': remotes['https://json-schema.org/draft/2020-12/meta/validation'],
-    "draft-2019-09": remotes['https://json-schema.org/draft/2019-09/meta/validation'],
-    "draft-07": remotes['http://json-schema.org/draft-07/schema#'],
-    "draft-06": remotes['http://json-schema.org/draft-06/schema#'],
-    "draft-04": remotes['http://json-schema.org/draft-04/schema#'],
+    'draft-2020-12': remotesByUri['https://json-schema.org/draft/2020-12/meta/validation'],
+    "draft-2019-09": remotesByUri['https://json-schema.org/draft/2019-09/meta/validation'],
+    "draft-07": remotesByUri['http://json-schema.org/draft-07/schema#'],
+    "draft-06": remotesByUri['http://json-schema.org/draft-06/schema#'],
+    "draft-04": remotesByUri['http://json-schema.org/draft-04/schema#'],
 }
 
 export const DraftSchemas : Record<DraftId, string> = {
@@ -48,9 +55,6 @@ export const DraftMetaCompilers: Record<DraftId, SchemaNode> = {
     "draft-06": compileSchema(DraftMetaSchemas['draft-06'], {drafts: [Drafts['draft-06']]}),
     "draft-04": compileSchema(DraftMetaSchemas['draft-04'], {drafts: [Drafts['draft-04']]}),
 }
-
-
-
 
 
 
