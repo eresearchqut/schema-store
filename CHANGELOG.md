@@ -1,3 +1,10 @@
+# [1.7.0](https://github.com/eresearchqut/schema-store/compare/v1.6.2...v1.7.0) (2026-05-19)
+
+
+### Features
+
+* Repo description ([afd274b](https://github.com/eresearchqut/schema-store/commit/afd274b04bdc4d2457a00a4b9903ba743b660b9e))
+
 ## [1.6.2](https://github.com/eresearchqut/schema-store/compare/v1.6.1...v1.6.2) (2026-05-19)
 
 
