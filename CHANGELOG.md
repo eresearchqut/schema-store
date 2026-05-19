@@ -1,3 +1,10 @@
+# [1.6.0](https://github.com/eresearchqut/schema-store/compare/v1.5.1...v1.6.0) (2026-05-19)
+
+
+### Features
+
+* enhance README with detailed usage examples and features ([25140e8](https://github.com/eresearchqut/schema-store/commit/25140e87613dcfacc59fa29c5e03e3b6d5801c31))
+
 ## [1.5.1](https://github.com/eresearchqut/schema-store/compare/v1.5.0...v1.5.1) (2026-02-19)
 
 
