@@ -109,6 +109,16 @@ describe("SchemaRepository", () => {
             expect(Array.isArray(err.getErrors())).toBe(true);
             expect(err.getErrors().length).toBeGreaterThan(0);
         });
+
+        it("uses DEFAULT_FIRST_VERSION (0-0-1) when firstVersion is not configured", async () => {
+            const defaultRepo = new SchemaRepository({
+                schemaStore: new TestSchemaStore(),
+                baseUrl: new URL("https://example.com/"),
+            });
+            const created = await defaultRepo.createSchema({path, draftId, schema: validSchema});
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            expect((created as any).$id).toBe(`https://example.com/${path}/0-0-1`);
+        });
     });
 
     describe("getSchema", () => {
@@ -140,6 +150,18 @@ describe("SchemaRepository", () => {
             expect(err.name).toBe("SchemaNotFoundError");
             expect(err.getPath()).toBe(missingPath);
             expect(err.getSchemaVersion()).toBeUndefined();
+        });
+
+        it("throws SchemaNotFoundError when a specific version exists in the index but the store returns no document", async () => {
+            await repo.createSchema({path, draftId, schema: validSchema});
+            // Corrupt the store by removing the schema document while leaving the version key
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            (store as any).store[path][v1.toString()] = undefined;
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const err = await repo.getSchema({path, schemaVersion: v1}).catch((e: unknown) => e) as any;
+            expect(err.name).toBe("SchemaNotFoundError");
+            expect(err.getPath()).toBe(path);
+            expect(err.getSchemaVersion()?.toString()).toBe(v1.toString());
         });
     });
 
@@ -236,6 +258,23 @@ describe("SchemaRepository", () => {
             expect(err.name).toBe("SchemaUpdateError");
             expect(err.getPath()).toBe(path);
             expect(err.getSchemaUpdateType()).toBe("addition");
+        });
+
+        it("allows draft change when updateType is model", async () => {
+            const newDraft: DraftId = "draft-2020-12";
+            const result = await repo.updateSchema({path, draftId: newDraft, updateType: "model", schema: validSchema});
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            expect((result as any).$schema).toBe(DraftSchemas[newDraft]);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            expect((result as any).$id).toBe(`https://example.com/${path}/1-0-0`);
+        });
+
+        it("infers the current draft when draftId is omitted", async () => {
+            // Cast to bypass the required draftId type — tests runtime fallback to current draft
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const result = await repo.updateSchema({path, updateType: "addition", schema: validSchema} as any);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            expect((result as any).$schema).toBe(DraftSchemas[draftId]);
         });
 
         it("validates schema during update and throws SchemaValidationError with details on invalid schema", async () => {
