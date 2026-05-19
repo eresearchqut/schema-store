@@ -1,3 +1,10 @@
+## [1.6.1](https://github.com/eresearchqut/schema-store/compare/v1.6.0...v1.6.1) (2026-05-19)
+
+
+### Bug Fixes
+
+* Publish to both repos ([d54bdb6](https://github.com/eresearchqut/schema-store/commit/d54bdb699fbe8fd82b1ed5ce21ecd4440d55849e))
+
 # [1.6.0](https://github.com/eresearchqut/schema-store/compare/v1.5.1...v1.6.0) (2026-05-19)
 
 
