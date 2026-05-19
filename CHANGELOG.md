@@ -1,3 +1,10 @@
+## [1.7.2](https://github.com/eresearchqut/schema-store/compare/v1.7.1...v1.7.2) (2026-05-19)
+
+
+### Bug Fixes
+
+* Repo publish ([f79fd09](https://github.com/eresearchqut/schema-store/commit/f79fd09b8f6278ca411101aac9f7ee0ac694d8ef))
+
 ## [1.7.1](https://github.com/eresearchqut/schema-store/compare/v1.7.0...v1.7.1) (2026-05-19)
 
 
