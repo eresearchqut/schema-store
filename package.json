@@ -1,6 +1,6 @@
 {
   "name": "@eresearchqut/schema-store",
-  "version": "1.6.1",
+  "version": "1.6.2",
   "description": "A TypeScript library providing a generic validation and store operations for json schemas.",
   "main": "./dist/index.cjs",
   "types": "./dist/index.d.cts",
