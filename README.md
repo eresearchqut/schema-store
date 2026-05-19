@@ -3,6 +3,8 @@
 [![npm version](https://badge.fury.io/js/@eresearchqut%2Fschema-store.svg)](https://badge.fury.io/js/@eresearchqut%2Fschema-store)
 [![Coverage Status](https://coveralls.io/repos/github/eresearchqut/schema-store/badge.svg?branch=main)](https://coveralls.io/github/eresearchqut/schema-store?branch=main)
 
+A TypeScript library for versioned [JSON Schema](https://json-schema.org/) lifecycle management. It provides a storage-agnostic repository layer for creating, retrieving, and evolving schemas over time — with built-in validation against JSON Schema drafts 04 through 2020-12 and a domain-specific three-part versioning system (`model-revision-addition`) that makes the intent of each schema change explicit.
+
 ## Features
 
 - **Versioned schema storage** — schemas are stored with a three-part `{model}-{revision}-{addition}` version (e.g. `1-2-0`), analogous to semver with domain-specific semantics
