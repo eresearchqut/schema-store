@@ -1,3 +1,10 @@
+## [1.7.3](https://github.com/eresearchqut/schema-store/compare/v1.7.2...v1.7.3) (2026-05-20)
+
+
+### Bug Fixes
+
+* add NPM_TOKEN to release workflow and remove ddb-repository entries from CHANGELOG ([38165e1](https://github.com/eresearchqut/schema-store/commit/38165e18af202d12b985764eb6d6e5d938476f20))
+
 ## [1.7.2](https://github.com/eresearchqut/schema-store/compare/v1.7.1...v1.7.2) (2026-05-19)
 
 
