@@ -1,3 +1,10 @@
+## [1.7.4](https://github.com/eresearchqut/schema-store/compare/v1.7.3...v1.7.4) (2026-05-20)
+
+
+### Bug Fixes
+
+* write GitHub Packages auth token directly to npmrc in release workflow ([ec4422e](https://github.com/eresearchqut/schema-store/commit/ec4422e1deb4411f28f378ea7422adff4826ba31))
+
 ## [1.7.3](https://github.com/eresearchqut/schema-store/compare/v1.7.2...v1.7.3) (2026-05-20)
 
 
