@@ -36,7 +36,6 @@
     "@semantic-release/github": "^12.0.8",
     "@semantic-release/npm": "^13.1.5",
     "@types/jest": "^30.0.0",
-    "@types/lodash": "^4.17.24",
     "@types/node": "^25.9.1",
     "eslint": "^10.4.0",
     "eslint-plugin-jest": "^29.15.2",
@@ -50,8 +49,7 @@
     "typescript-eslint": "^8.59.4"
   },
   "peerDependencies": {
-    "json-schema-library": "^11.4.0",
-    "lodash": "^4.18.1"
+    "json-schema-library": "^11.4.1"
   },
   "repository": {
     "type": "git",

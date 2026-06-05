@@ -25,10 +25,10 @@ npm install @eresearchqut/schema-store
 ## Prerequisites
 
 - Node.js
-- [`json-schema-library`](https://www.npmjs.com/package/json-schema-library) and [`lodash`](https://www.npmjs.com/package/lodash) (peer dependencies)
+- [`json-schema-library`](https://www.npmjs.com/package/json-schema-library) (peer dependency)
 
 ```sh
-npm install json-schema-library lodash
+npm install json-schema-library
 ```
 
 ## Usage
