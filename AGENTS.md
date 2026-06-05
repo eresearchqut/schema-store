@@ -65,13 +65,11 @@ test/
 
 ```sh
 npm run build          # Compile to dist/ (ESM + CJS) using tsdown
-npm run test           # Run Jest test suite
+npm run test           # Run Vitest test suite
 npm run test:coverage  # Run tests with coverage report
 npm run lint           # ESLint
 npm run lint:fix       # ESLint with auto-fix
 ```
-
-> Tests require `--experimental-vm-modules` (already configured in `package.json`).
 
 ---
 

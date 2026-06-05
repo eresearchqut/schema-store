@@ -1,6 +1,6 @@
 import eslint from '@eslint/js';
+import vitestPlugin from '@vitest/eslint-plugin';
 import { defineConfig, globalIgnores } from 'eslint/config';
-import jestPlugin from 'eslint-plugin-jest';
 import simpleImportSort from 'eslint-plugin-simple-import-sort';
 import tseslint from 'typescript-eslint';
 
@@ -20,9 +20,9 @@ export default defineConfig([
     },
     {
         files: ['test/**/*.ts'],
-        plugins: { jest: jestPlugin },
+        plugins: { vitest: vitestPlugin },
         rules: {
-            ...jestPlugin.configs['flat/recommended'].rules,
+            ...vitestPlugin.configs.recommended.rules,
         },
     },
 ]);
