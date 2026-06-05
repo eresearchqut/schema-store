@@ -1,3 +1,10 @@
+# [1.8.0](https://github.com/eresearchqut/schema-store/compare/v1.7.4...v1.8.0) (2026-06-05)
+
+
+### Features
+
+* migrate from Jest to Vitest and update testing configuration files ([0b89aa0](https://github.com/eresearchqut/schema-store/commit/0b89aa073f9da3e09b5ad64ee543444a80717611))
+
 ## [1.7.4](https://github.com/eresearchqut/schema-store/compare/v1.7.3...v1.7.4) (2026-05-20)
 
 
